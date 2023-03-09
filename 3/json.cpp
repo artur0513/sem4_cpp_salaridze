@@ -37,14 +37,15 @@ int main()
 	int number_of_humans;
 	std::cin >> number_of_humans;
 
-	std::filesystem::create_directory("people");
+	std::string save_path = "people";
+	std::filesystem::create_directory(save_path);
 
 	std::vector<std::pair<Human, json>> people(number_of_humans);
 	for (auto& human : people) {
 		std::cin >> human.first;
 		human.second = human.first;// автоматически вызывает to_json
 
-		std::ofstream out("people/" + human.first.name + ".json");
+		std::ofstream out(save_path + "/" + human.first.name + ".json");
 		out << human.second;
 		out.close();
 	}
