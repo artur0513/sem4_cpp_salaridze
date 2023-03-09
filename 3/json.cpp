@@ -28,6 +28,8 @@ void to_json(json& j, const Human& human) {
 
 int main()
 {
+	const std::string save_path = "people";
+
 	/* input example :
 	3
 	vasya pupkin abc@gmail.com 30 123145
@@ -37,7 +39,6 @@ int main()
 	int number_of_humans;
 	std::cin >> number_of_humans;
 
-	const std::string save_path = "people";
 	std::filesystem::create_directory(save_path);
 
 	std::vector<std::pair<Human, json>> people(number_of_humans);
