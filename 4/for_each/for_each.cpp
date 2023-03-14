@@ -38,7 +38,7 @@ namespace my {
 	constexpr UnaryFunction for_each(InputIt first, InputIt last, UnaryFunction f)
 	{
 		unsigned num_threads = std::thread::hardware_concurrency(), per_thread = (last - first)/num_threads;
-		std::vector<std::shared_future<UnaryFunction>> futures;
+		std::vector<std::future<UnaryFunction>> futures;
 
 		for (unsigned i = 0; i < num_threads - 1; i++) {
 			futures.push_back(std::async(std::launch::async, std::for_each<InputIt, UnaryFunction>, first + i * per_thread, first + (i + 1) * per_thread, f));
