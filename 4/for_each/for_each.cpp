@@ -35,17 +35,15 @@ private:
 namespace my {
 	// originally copied from https://en.cppreference.com/w/cpp/algorithm/for_each
 	template<class InputIt, class UnaryFunction>
-	constexpr UnaryFunction for_each(InputIt first, InputIt last, UnaryFunction f)
+	constexpr void for_each(InputIt first, InputIt last, UnaryFunction f)
 	{
-		unsigned num_threads = std::thread::hardware_concurrency(), per_thread = (last - first)/num_threads;
+		unsigned num_threads = std::thread::hardware_concurrency(), per_thread = (last - first) / num_threads;
 		std::vector<std::future<UnaryFunction>> futures;
 
 		for (unsigned i = 0; i < num_threads - 1; i++) {
 			futures.push_back(std::async(std::launch::async, std::for_each<InputIt, UnaryFunction>, first + i * per_thread, first + (i + 1) * per_thread, f));
 		}
-		futures.push_back(std::async(std::launch::async, std::for_each<InputIt, UnaryFunction>, first + (num_threads - 1)* per_thread, last, f));
-
-		return f; // implicit move since C++11
+		futures.push_back(std::async(std::launch::async, std::for_each<InputIt, UnaryFunction>, first + (num_threads - 1) * per_thread, last, f));
 	}
 }
 
@@ -81,5 +79,5 @@ int main() {
 		Timer<std::chrono::milliseconds> t("Parallel, std function");
 		std::for_each(std::execution::par, randoms.begin(), randoms.end(), test_lambda);
 	}
-	
+
 }
